@@ -17,6 +17,8 @@
 
 #pragma once
 
+#ifdef __cplusplus
+
 #include <linux/bpf.h>
 
 #include <fstream>
@@ -39,3 +41,18 @@ unsigned int readSectionUint(const char* name, std::ifstream& elfFile, unsigned 
 
 }  // namespace bpf
 }  // namespace android
+
+extern "C" {
+#else // __cplusplus
+#define __noreturn
+#endif // __cplusplus
+
+// The C++ portion of the BpfLoader is exposed as 3 functions to be called in order.
+void initLogging();
+void createBpfFsSubDirectories();
+void legacyBpfLoader();
+__noreturn void execNetBpfLoadDone();
+
+#ifdef __cplusplus
+}  // extern C
+#endif
